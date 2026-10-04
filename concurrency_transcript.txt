@@ -1,0 +1,49 @@
+// Left Terminal 
+
+BEGIN;
+SELECT vaccination_given FROM treatments WHERE treatment_id = 2;
+BEGIN
+ vaccination_given 
+-------------------
+ t
+(1 row)
+
+animal_birth_control=*# SELECT vaccination_given FROM treatments WHERE treatment_id = 2;
+ vaccination_given 
+-------------------
+ t
+(1 row)
+
+animal_birth_control=*# COMMIT;
+COMMIT
+animal_birth_control=# UPDATE treatments SET vaccination_given = FALSE WHERE treatment_id = 2;
+UPDATE 1
+animal_birth_control=# BEGIN;
+SELECT vaccination_given FROM treatments WHERE treatment_id = 2 FOR UPDATE;
+BEGIN
+ vaccination_given 
+-------------------
+ f
+(1 row)
+
+animal_birth_control=*# UPDATE treatments SET vaccination_given = TRUE WHERE treatment_id = 2;
+COMMIT;
+UPDATE 1
+COMMIT
+animal_birth_control=# 
+
+ // Right Terminal 
+
+ BEGIN;
+UPDATE treatments SET vaccination_given = TRUE WHERE treatment_id = 2;
+COMMIT;
+BEGIN
+UPDATE 1
+COMMIT
+animal_birth_control=# BEGIN;
+UPDATE treatments SET vaccination_given = TRUE WHERE treatment_id = 2;
+BEGIN
+UPDATE 1
+animal_birth_control=*# COMMIT;
+COMMIT
+animal_birth_control=# 
